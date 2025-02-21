@@ -106,12 +106,14 @@ kubectl apply -f k8s/app/
 ## 🔑 Secret Management
 
 ### Cluster Secrets (`/cluster-secrets/*`)
+
 ```bash
 # Example: Retrieve database credentials
 curl http://localhost:30001/cluster-secret/database
 ```
 
 ### Application Secrets (`/app-secrets/*`)
+
 ```bash
 # Example: Retrieve API keys
 curl http://localhost:30001/app-secret/api-keys
@@ -120,11 +122,13 @@ curl http://localhost:30001/app-secret/api-keys
 ## 🛡 Security Features
 
 1. **Authentication**
+
    - Kubernetes service account-based
    - Automatic token rotation
    - Role-based access control
 
 2. **Secret Storage**
+
    - KV Version 2 secret engine
    - Versioned secrets
    - Path-based isolation
@@ -133,6 +137,19 @@ curl http://localhost:30001/app-secret/api-keys
    - TLS encryption
    - Internal service communication
    - Limited external access
+
+## 🖥️ Vault UI
+
+Access the Vault UI through your browser at `http://localhost:30000`:
+
+![Vault UI](docs/vault-ui.png)
+
+The UI provides a user-friendly interface for:
+
+- Managing secrets
+- Configuring authentication methods
+- Monitoring Vault status
+- Managing policies and access control
 
 ## 🔧 Configuration
 
@@ -161,10 +178,11 @@ VAULT_ROLE_NAME=app-role              # Kubernetes auth role
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-   - Uses Kubernetes Service Account tokens
-   - No static credentials in code or configuration
+- Uses Kubernetes Service Account tokens
+- No static credentials in code or configuration
 
 2. **Authorization**
+
    - Separate policies for cluster and application secrets
    - Principle of least privilege
 
@@ -175,12 +193,14 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Development
 
 1. **Local Development**
+
    ```bash
    cd app
    go run main.go
    ```
 
 2. **Building the Container**
+
    ```bash
    docker build -t your-registry/app:tag .
    ```
@@ -198,11 +218,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Troubleshooting
 
 1. **Vault Status**
+
    ```bash
    kubectl -n vault exec -it vault-0 -- vault status
    ```
 
 2. **View Application Logs**
+
    ```bash
    kubectl -n app logs -l app=golang-app
    ```

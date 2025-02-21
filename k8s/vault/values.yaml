@@ -39,6 +39,7 @@ server:
 ui:
   enabled: true
   serviceType: NodePort
+  serviceNodePort: 30000
 
 
 injector:
