@@ -5,6 +5,7 @@ This guide will walk you through setting up the Vault Kubernetes Secret Manageme
 ## Prerequisites Installation
 
 ### 1. Install Docker Desktop
+
 ```bash
 # macOS (using Homebrew)
 brew install --cask docker
@@ -14,6 +15,7 @@ open -a Docker
 ```
 
 ### 2. Install Kubectl
+
 ```bash
 # macOS (using Homebrew)
 brew install kubectl
@@ -23,6 +25,7 @@ kubectl version --client
 ```
 
 ### 3. Install Kind (Kubernetes in Docker)
+
 ```bash
 # macOS (using Homebrew)
 brew install kind
@@ -32,6 +35,7 @@ kind version
 ```
 
 ### 4. Install Helm
+
 ```bash
 # macOS (using Homebrew)
 brew install helm
@@ -41,6 +45,7 @@ helm version
 ```
 
 ### 5. Install Go
+
 ```bash
 # macOS (using Homebrew)
 brew install go
@@ -52,6 +57,7 @@ go version  # Should show Go 1.22 or later
 ## Project Setup
 
 ### 1. Clone the Repository
+
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -59,6 +65,7 @@ cd poc-vault-go-kube
 ```
 
 ### 2. Create Kubernetes Cluster
+
 ```bash
 # Create a new Kind cluster using our configuration
 kind create cluster --config k8s/kind-config.yaml --name vault-demo
@@ -68,6 +75,7 @@ kubectl cluster-info
 ```
 
 ### 3. Create Namespaces
+
 ```bash
 # Create required namespaces
 kubectl create namespace vault
@@ -80,6 +88,7 @@ kubectl get namespaces
 ## Vault Setup
 
 ### 1. Install Vault
+
 ```bash
 # Add HashiCorp Helm repository
 helm repo add hashicorp https://helm.releases.hashicorp.com
@@ -95,6 +104,7 @@ kubectl -n vault wait --for=condition=ready pod -l app.kubernetes.io/name=vault
 ```
 
 ### 2. Initialize and Unseal Vault
+
 ```bash
 # Initialize Vault
 kubectl -n vault exec -it vault-0 -- vault operator init
@@ -112,6 +122,7 @@ kubectl -n vault exec -it vault-0 -- vault status
 ```
 
 ### 3. Configure Vault
+
 ```bash
 # Login to Vault
 kubectl -n vault exec -it vault-0 -- vault login
@@ -141,6 +152,7 @@ kubectl -n vault exec -it vault-0 -- vault kv put app-secrets/api-keys \
 ## Application Deployment
 
 ### 1. Build and Load Docker Image
+
 ```bash
 # Build the application
 cd app
@@ -151,6 +163,7 @@ kind load docker-image vault-demo-app:latest --name vault-demo
 ```
 
 ### 2. Deploy the Application
+
 ```bash
 # Apply Kubernetes configurations
 kubectl apply -f k8s/app/
@@ -165,6 +178,7 @@ kubectl -n app get pods
 ## Verification
 
 ### 1. Check Vault UI Access
+
 ```bash
 # Vault UI should be accessible at:
 open http://localhost:30000
@@ -173,6 +187,7 @@ open http://localhost:30000
 ```
 
 ### 2. Test Secret Retrieval
+
 ```bash
 # Test cluster secrets endpoint
 curl http://localhost:30001/cluster-secret/database
@@ -187,6 +202,7 @@ curl http://localhost:30001/health
 ## Common Issues and Solutions
 
 ### 1. Vault Pod Not Starting
+
 ```bash
 # Check pod status
 kubectl -n vault get pods
@@ -197,6 +213,7 @@ kubectl -n vault logs vault-0
 ```
 
 ### 2. Application Authentication Issues
+
 ```bash
 # Verify service account
 kubectl -n app get serviceaccount
@@ -206,6 +223,7 @@ kubectl -n app logs -l app=vault-demo-app
 ```
 
 ### 3. Secret Access Issues
+
 ```bash
 # Verify secret engine
 kubectl -n vault exec -it vault-0 -- vault secrets list
@@ -217,6 +235,7 @@ kubectl -n vault exec -it vault-0 -- vault policy read app-policy
 ## Cleanup
 
 ### Remove Everything
+
 ```bash
 # Delete the Kind cluster
 kind delete cluster --name vault-demo
@@ -228,12 +247,14 @@ docker rmi vault-demo-app:latest
 ## Next Steps
 
 1. **Production Considerations**
+
    - Set up high availability
    - Configure proper backup strategies
    - Implement secret rotation
    - Set up monitoring and alerting
 
 2. **Security Hardening**
+
    - Enable TLS
    - Implement stricter policies
    - Set up audit logging
