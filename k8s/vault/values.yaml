@@ -1,0 +1,45 @@
+server:
+  dev:
+    enabled: false
+  standalone:
+    enabled: true
+    config: |
+      ui = true
+      
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+      
+      storage "file" {
+        path = "/vault/data"
+      }
+
+  service:
+    enabled: true
+    type: NodePort
+
+  dataStorage:
+    enabled: true
+    size: 1Gi
+    storageClass: standard
+    accessMode: ReadWriteOnce
+
+  auditStorage:
+    enabled: true
+    size: 1Gi
+    storageClass: standard
+    accessMode: ReadWriteOnce
+
+  extraEnvironmentVars:
+    VAULT_ADDR: "http://127.0.0.1:8200"
+    VAULT_API_ADDR: "http://127.0.0.1:8200"
+
+ui:
+  enabled: true
+  serviceType: NodePort
+
+
+injector:
+  enabled: true
